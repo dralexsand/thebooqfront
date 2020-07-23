@@ -111,7 +111,30 @@
                 </div>
             </div>
         
+        @else
+
+            @if ($is_new == 1)
+                <div class="flex mb-4">
+                    <div class="w-ful">
+                        <h4>An article on this topic has been created and is under moderation</h4>
+                    </div>
+                </div>
+            @else
+                <div class="flex mb-4">
+                    <div class="w-ful">
+                        <h4>There is no such content yet. Want to create an article?</h4>
+                        <span>
+                        <a href="/create/{{ $searchkey }}"
+                           class="links_searchresults bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                        Create
+                    </a>
+                    </span>
+                    </div>
+                </div>
+            @endif
+            
         @endif
+
         
         <hr>
         <div class="flex mb-4">

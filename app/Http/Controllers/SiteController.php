@@ -27,9 +27,6 @@
          */
         public function index($search = null)
         {
-            /*if (!$search) {
-                return view('welcome');
-            }*/
             
             $api = new API();
             
@@ -58,14 +55,25 @@
                 }
             }
             
-            $searchresults = $api->apiGetAllArticles();
+            $searchresults = $api->apiGetSearchMediaWiki($search);
+            //$searchresults = $api->apiGetAllArticles();
+            
+            
+            if (!empty($search) && empty($exact_match_searchresults)) {
+                
+                $search_tag = str_replace(' ', '_', strtolower($search));
+                $articleIsNew = $api->apiSearchArticleInModified($search_tag);
+            }
+            
+            $isNew = !empty($articleIsNew) ? 1 : 0;
             
             return view('search',
                 [
                     'searchkey' => $search,
                     'searchresults' => $searchresults,
                     'keysPanel' => $keysPanel,
-                    'exact_match_searchresults' => $exact_match_searchresults
+                    'exact_match_searchresults' => $exact_match_searchresults,
+                    'is_new' => $isNew
                 ]
             );
         }
@@ -108,12 +116,12 @@
         {
             return view('history');
         }
-    
+        
         public function about()
         {
             return view('about');
         }
-    
+        
         public function contacts()
         {
             return view('contacts');
@@ -192,7 +200,36 @@
                 ]);
         }
         
-        public function create($id)
+        public function store()
+        {
+            $post = $_POST;
+            $post['tag'] = str_replace(' ', '_', strtolower($post['title']));
+            $post['article_id'] = random_int(111111111, 999999999);
+            $post['type'] = 'article';
+            $post['original_article_id'] = 0;
+            $post['created'] = date('Y-m-d H:i:s');
+            $post['user_id'] = 7;
+            
+            $data = \GuzzleHttp\json_encode($post);
+            $api = new API();
+            $result = $api->apiPostModified($data);
+            
+            $redirect = 'search/' . $post['title'];
+            
+            return redirect($redirect);
+        }
+        
+        public function create($data)
+        {
+            return view('create',
+                [
+                    'title' => $data
+                ]
+            );
+        }
+        
+        
+        public function post($id)
         {
             $post = $_POST;
         }

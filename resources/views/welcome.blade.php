@@ -6,7 +6,7 @@
     
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <title>Laravel</title>
+    <title>TheBooq</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
