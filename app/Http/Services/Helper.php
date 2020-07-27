@@ -9,10 +9,15 @@
         public static function extractTagsAndConvertSingleJsonToArray($tags_json)
         {
             $key_array = \GuzzleHttp\json_decode($tags_json, true);
+            
             $tags = [];
-            foreach ($key_array as $key) {
-                $tags[] = $key['tag'];
+            
+            if (!empty($key_array)) {
+                foreach ($key_array as $key) {
+                    $tags[] = $key['tag'];
+                }
             }
+            
             return $tags;
         }
         
@@ -35,7 +40,7 @@
                     } else {
                         
                         if (strlen($value) > $max) {
-                            $converted_item[$field] = self::truncate_text_nicely($value, $max, 'Подробнее...');
+                            $converted_item[$field] = self::truncate_text_nicely($value, $max, '...Details...');
                         } else {
                             $converted_item[$field] = $value;
                         }
@@ -124,6 +129,21 @@
                 'Diseases of dogs',
                 'Dog walking areas',
             ];
+        }
+        
+        
+        public static function getExcpectedChars()
+        {
+            return [
+                "'", '"', ' ', '.', '(', ')', '{', '}', '*', '&', '%', '^', '$',
+                '#', '@', '!', '~', '`', '+', '-', '/', '|', '\\', '?', '<', '>', ':'
+            ];
+        }
+        
+        public static function convertToTag($string)
+        {
+            $expectedChars = self::getExcpectedChars();
+            return strtolower(str_replace($expectedChars, '_', $string));
         }
         
         

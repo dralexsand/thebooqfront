@@ -5,16 +5,22 @@
     
     class API
     {
-        private $base_url = 'http://localhost:4000/api/';
+        //private $base_url = 'http://localhost:4000/api/';
         //private $media_wiki_api_url = 'https://en.wikipedia.org/w/rest.php/v1/search/page?q='; // Black Sabbath&limit=5
         private $media_wiki_api_url_start = 'https://en.wikipedia.org/w/api.php?action=opensearch&search="'; // Black Sabbath&limit=5
         private $media_wiki_api_url_end = '"&format=json&callback=?'; // Black Sabbath&limit=5
         // https://en.wikipedia.org/w/api.php?action=opensearch&search="+ searchTerm +"&format=json&callback=?
-        
+    
+    
+        private $base_url; // = 'http://localhost:4000/api/';
+    
+        public function __construct()
+        {
+            $this->base_url = env('API_URL');
+        }
         
         
         private $google_search_api_key = 'AIzaSyDbCeIJKSceQ1dtqbLZGVpgwyBUEBNMdko';
-        
         
         public function apiGetSearchMediaWiki($search)
         {
@@ -31,6 +37,13 @@
             }
         }
         
+        public function apiGetLastId()
+        {
+            $url_request = $this->base_url . 'last_inc';
+            $result = $this->curlRequestGet($url_request);
+            $data = Helper::convertJsonToArray($result);
+            return $data[0]['id'];
+        }
         
         public function apiGetAllArticles()
         {
@@ -41,25 +54,29 @@
         }
     
     
-        public function apiSearchArticleInModified($tag)
-        {
-            $url_request = $this->base_url . 'articletaginmodified/' . $tag;
-            $result = $this->curlRequestGet($url_request);
-            return Helper::convertJsonToArray($result);
-        }
-        
-        
         public function apiGetArticleByTag($tag)
         {
-            if (!empty($tag)) {
-                $tag = strtolower(implode('_', explode(' ', $tag)));
-                $url_request = $this->base_url . 'articletag/' . $tag;
-                $result = $this->curlRequestGet($url_request);
+            $url_request = $this->base_url . 'articletag/' . $tag;
+            $result = $this->curlRequestGet($url_request);
+            if (!empty($result)) {
                 return Helper::convertJsonToArray($result);
             } else {
                 return [];
             }
         }
+        
+        public function apiSearchArticleByTagInModified($tag)
+        {
+            $url_request = $this->base_url . 'articletaginmodified/' . $tag;
+            $result = $this->curlRequestGet($url_request);
+            if (!empty($result)) {
+                return Helper::convertJsonToArray($result);
+            } else {
+                return [];
+            }
+        }
+        
+       
         
         public function apiGetArticleBy_Id($id)
         {
@@ -80,13 +97,33 @@
             return $this->curlRequestPost($url_request, $data);
         }
         
+        public function apiPostSaveMTags($data)
+        {
+            $url_request = $this->base_url . 'modifiedtag';
+            return $this->curlRequestPost($url_request, $data);
+        }
+        
+        public function apiGetCheckTagsDublicate($tag)
+        {
+            $url_request = $this->base_url . 'checktagsdublicate/' . $tag;
+            $result = $this->curlRequestGet($url_request);
+            return empty($result) ? 0 : 1;
+        }
+        
+        public function apiGetMTagsByArticle_id($article_id)
+        {
+            $url_request = $this->base_url . 'modifiedtag/' . $article_id;
+            return $this->curlRequestGet($url_request);
+        }
+        
         public function apiGetKeysByArticle_id($article_id)
         {
             $url_request = $this->base_url . 'tags/' . $article_id;
             return $this->curlRequestGet($url_request);
         }
         
-        private static function getRandomAgent(){
+        private static function getRandomAgent()
+        {
             $agents = [
                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:7.0.1) Gecko/20100101 Firefox/7.0.1',
                 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1.9) Gecko/20100508 SeaMonkey/2.0.4',
@@ -115,7 +152,7 @@
                 'Content-Type: application/json;',
                 'Accept-Language: en-us,en;q=0.5',
                 'Pragma',
-                'User-Agent: '.self::getRandomAgent(),
+                'User-Agent: ' . self::getRandomAgent(),
                 'X-MicrosoftAjax: Delta=true'
             ];
             
@@ -162,7 +199,7 @@
             curl_close($curl);
             return $response;
         }
-
+        
     }
 
 

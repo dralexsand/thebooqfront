@@ -32,12 +32,12 @@
                         Article
                     </a>
                     </span>
-                    <span>
+                    {{--<span>
                         <a href="/edit/{{ $article['article_id'] }}"
                            class="links_searchresults bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
                         Edit
                     </a>
-                    </span>
+                    </span>--}}
                     <span>
                         <a href="/discuss/{{ $article['article_id'] }}"
                            class="links_searchresults bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
@@ -56,7 +56,7 @@
             <form action="/update" method="post">
                 @csrf
                 
-                <input name="original_article_id" type="hidden" value="{{ $article['_id'] }}">
+                <input name="article_id" type="hidden" value="{{ $article['article_id'] }}">
                 <input name="tag" type="hidden" value="{{ $article['tag'] }}">
                 
                 <div class="flex mb-4 text-lg bg-gray-100">

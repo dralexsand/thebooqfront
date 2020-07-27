@@ -12,6 +12,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/search', 'SiteController@index');
 Route::get('/search/{search}', 'SiteController@index');
+Route::get('/search/?q=search+with+%2f+slash', 'SiteController@index');
 
 Route::get('/edit/{edit}', 'SiteController@edit');
 Route::get('/discuss/{discuss}', 'SiteController@discuss');

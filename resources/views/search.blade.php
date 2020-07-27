@@ -56,15 +56,15 @@
         @if(!empty($exact_match_searchresults))
             <div class="flex mb-4">
                 <div class="w-ful">
-                    <span>
-                        <a href="/search/{{ $exact_match_searchresults['title'] }}"
-                           class="links_searchresults bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
-                        Article
-                    </a>
-                    </span>
+                    {{-- <span>
+                         <a href="/search/{{ $exact_match_searchresults['title'] }}"
+                            class="links_searchresults bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                         Article
+                     </a>
+                     </span>--}}
                     
                     <span>
-                        <a href="/edit/{{ $exact_match_searchresults['_id'] }}"
+                        <a href="/edit/{{ $exact_match_searchresults['title'] }}"
                            class="links_searchresults bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
                         Edit
                     </a>
@@ -112,7 +112,7 @@
             </div>
         
         @else
-
+            
             @if ($is_new == 1)
                 <div class="flex mb-4">
                     <div class="w-ful">
@@ -132,9 +132,9 @@
                     </div>
                 </div>
             @endif
-            
+        
         @endif
-
+        
         
         <hr>
         <div class="flex mb-4">
@@ -168,7 +168,9 @@
                                             {{ $searchresult['title'] }}
                                         </div>
                                         <p class="text-gray-700 text-base">
+                                            
                                             {{ $searchresult['content'] }}
+                                        
                                         </p>
                                     </div>
                                     <div class="flex items-center">
